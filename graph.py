@@ -76,8 +76,9 @@ function intervalFunc() {
         call.end()
     }).then(function(data) {
         var parsedXML = xml.parse(data);
-        console.log(JSON.stringify(parsedXML))
-        var query = connection.query(`insert into sensors (type, device, unit, ip, value) values ('T', 102, 0, '192.168.1.1', 10.9)`,
+        var temp = parsedXML[0].childNodes[0].childNodes[6].childNodes[5].childNodes[0].childNodes[2];
+        console.log(temp)
+        var query = connection.query(`insert into sensors (type, device, unit, ip, value) values ('T', 102, 0, '192.168.1.1', ${temp})`,
             function(err, rows, cols) {
                 if (err) throw err;
                 console.log("done");
@@ -86,4 +87,4 @@ function intervalFunc() {
     })
 }
 
-setInterval(intervalFunc, 1500);
+setInterval(intervalFunc, 5000);
