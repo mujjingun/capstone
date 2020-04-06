@@ -49,7 +49,7 @@ function insert() {
     }).then((data) => {
         parseString(data, function (err, result) {
             temp = result["rss"]["channel"][0]["item"][0]["description"][0]["body"][0]["data"][0]["temp"][0];
-            insert_sensor("localhost", 0, "localhost", temp, 0, "localhost");
+            insert_sensor(0, 0, 0, temp, 0, "localhost");
         });
     })
 }
