@@ -35,19 +35,36 @@ app.get('/add', function(req, res) {
 
 app.get('/get', function(req, res) {
     var r = req.query;
-    var qstr = 'select * from sensors where device = ?';
-    new Promise((resolve, reject) => {
-        connection.query(qstr, r.device_id, function(err, rows, cols) {
-            if (!err) {
-                resolve(rows);
-            }
-            reject("Error")
+    if (r.device_id === "empty" || r.device_id === undefined) {
+        var qstr = 'select * from sensors';
+        new Promise((resolve, reject) => {
+            connection.query(qstr, r.device_id, function(err, rows, cols) {
+                if (!err) {
+                    resolve(rows);
+                }
+                reject("Error")
+            });
+        }).then((data) => {
+            res.json(data)
+        }).catch((e) => {
+            res.json(e);
         });
-    }).then((data) => {
-        res.json(data)
-    }).catch((e) => {
-        res.json(e);
-    });
+    }
+    else {
+        var qstr = 'select * from sensors where device = ?';
+        new Promise((resolve, reject) => {
+            connection.query(qstr, r.device_id, function(err, rows, cols) {
+                if (!err) {
+                    resolve(rows);
+                }
+                reject("Error")
+            });
+        }).then((data) => {
+            res.json(data)
+        }).catch((e) => {
+            res.json(e);
+        });
+    }
 });
 
 var server = app.listen(8098, function () {
