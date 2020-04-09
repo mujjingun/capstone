@@ -36,7 +36,7 @@ app.get('/add', function(req, res) {
 app.get('/get', function(req, res) {
     var r = req.query;
     if (r.device_id === "empty" || r.device_id === undefined) {
-        var qstr = 'select * from sensors';
+        var qstr = 'select * from sensors where time > (NOW() - INTERVAL 24 HOUR)';
         new Promise((resolve, reject) => {
             connection.query(qstr, r.device_id, function(err, rows, cols) {
                 if (!err) {
@@ -51,7 +51,7 @@ app.get('/get', function(req, res) {
         });
     }
     else {
-        var qstr = 'select * from sensors where device = ?';
+        var qstr = 'select * from sensors where time > (NOW() - INTERVAL 24 HOUR) and device = ?';
         new Promise((resolve, reject) => {
             connection.query(qstr, r.device_id, function(err, rows, cols) {
                 if (!err) {
