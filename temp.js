@@ -28,7 +28,12 @@ function insert_sensor(device, unit, type, value, seq, ip) {
 
 app.get('/', function(req, res) {
     var r = req.query;
-    res.json("hello");
+    try {
+        insert_sensor(r.device_id, 0, 0, r.temperature_value, r.sequence_number, req.ip);
+    } catch (e) {
+        res.json(e);
+    }
+    res.json({"device_id": r.device_id, "status": "ok", "time": new Date()})
 });
 
 var server = app.listen(8098, function () {
