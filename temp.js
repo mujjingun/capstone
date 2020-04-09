@@ -21,19 +21,31 @@ function insert_sensor(device, unit, type, value, seq, ip) {
   obj.ip = ip.replace(/^.*:/, '')
 
   var query = connection.query('insert into sensors set ?', obj, function(err, rows, cols) {
-    if (err) throw err;
-    console.log("database insertion ok= %j", obj);
+    if (!err) {
+        console.log("database insertion ok= %j", obj);
+    }
   });
 }
 
-app.get('/', function(req, res) {
+app.get('/add', function(req, res) {
     var r = req.query;
-    try {
-        insert_sensor(r.device_id, 0, 0, r.temperature_value, r.sequence_number, req.ip);
-    } catch (e) {
-        res.json(e);
-    }
+    insert_sensor(r.device_id, 0, 0, r.temperature_value, r.sequence_number, req.ip);
     res.json({"device_id": r.device_id, "status": "ok", "time": new Date()})
+});
+
+app.get('/get', function(req, res) {
+    var r = req.query;
+    var qstr = 'select * from sensors where device = ?';
+    new Promise((resolve, reject) => {
+        connection.query(qstr, r.device_id, function(err, rows, cols) {
+            if (!err) {
+                resolve(rows);
+            }
+            reject("Error")
+        });
+    }).then((data) => {
+        res.json(result)
+    });
 });
 
 var server = app.listen(8098, function () {
