@@ -44,7 +44,9 @@ app.get('/get', function(req, res) {
             reject("Error")
         });
     }).then((data) => {
-        res.json(result)
+        res.json(data)
+    }).catch((e) => {
+        res.json(e);
     });
 });
 
